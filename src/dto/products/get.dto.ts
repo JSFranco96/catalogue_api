@@ -1,18 +1,12 @@
-import { CreateTagDTO } from "../tags/create.dto";
+import { IImages } from "../../utils/interfaces"
+import { CreateTagDTO } from "../tags/create.dto"
 
-interface CreateProductDTO {
-    name: String;
-    description: String;
-    sku: String;
-    images: Array<Images>;
-    tags: Array<CreateTagDTO>;
-    price: Number;
-    stock: Number;
+interface GetProductsDTO {
+    name: string
+    sku: string
+    price: number
+    images: Array<IImages>,
+    tags: Array<CreateTagDTO>
 }
 
-interface Images {
-    url: String;
-    uploaded: Boolean;
-}
-
-export { CreateProductDTO }
+export { GetProductsDTO }

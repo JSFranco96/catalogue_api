@@ -14,6 +14,7 @@ class ProductsRouter {
     #productValidator: ProductsValidator
 
     constructor() {
+        
         this.#router = Router()
         this.#productController = new ProductsController()
         this.#productValidator = new ProductsValidator()
@@ -22,11 +23,37 @@ class ProductsRouter {
     }
 
     #initializeRoutes() {
-        this.#router.get('/', this.#productController.getAll)
-        this.#router.get('/:id', this.#productValidator.validateProductCreation, this.#productController.getById)
-        this.#router.post('/', this.#productValidator.validateProductCreation, this.#productController.create)
-        this.#router.get('/:id', this.#productValidator.validateProductCreation, this.#productController.update)
-        this.#router.get('/:id', this.#productValidator.validateProductCreation, this.#productController.delete)
+
+        this.#router.get(
+            '/',
+            this.#productController.getAll
+        )
+
+        this.#router.get(
+            '/:id',
+            this.#productValidator.validateProductId,
+            this.#productController.getById
+        )
+
+        this.#router.post(
+            '/',
+            this.#productValidator.validateProductCreation,
+            this.#productController.create
+        )
+
+        this.#router.patch(
+            '/:id',
+            this.#productValidator.validateProductId,
+            this.#productValidator.validateProductCreation,
+            this.#productController.update
+        )
+
+        this.#router.delete(
+            '/:id',
+            this.#productValidator.validateProductId,
+            this.#productController.delete
+        )
+
     }
 
 }
