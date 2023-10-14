@@ -1,21 +1,41 @@
-import { Connect } from './db';
+import { Database } from './db';
 import { App } from './app';
 import { config } from 'dotenv';
 import path from 'path';
+import { DEFAULTS } from './utils/constants';
 
-const env = `.env.${process.env.NODE_ENV}`;
+class Server {
 
-const envPath = path.resolve(__dirname, '..', env)
+    #env: string
+    #port: number
+    #mongoURI: string
 
-config({ path: envPath });
+    constructor() {
+        this.#env = path.resolve(__dirname, '..', `.env.${process.env.NODE_ENV}`)
+        this.#environmentConfig()
+        this.#port = process.env.PORT ? +process.env.PORT : DEFAULTS.PORT
+        this.#mongoURI = process.env.MONGO_URI || DEFAULTS.MONGO_URI
+    }
 
-let port: number = 3000;
-if (process.env.PORT) {
-    port = +process.env.PORT;
+    startServer() {
+        this.#connectToDatabase()
+        this.#startApp()
+    }
+
+    #environmentConfig() {
+        config({ path: this.#env })
+    }
+
+    #connectToDatabase() {
+        const database = new Database(this.#mongoURI);
+        database.connect();
+    }
+
+    #startApp() {
+        const app = new App(this.#port);
+        app.start();
+    }
 }
 
-const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/catalogue'
-
-new Connect(mongoURI);
-
-new App(port);
+const server = new Server()
+server.startServer()

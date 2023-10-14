@@ -1,8 +1,15 @@
 import mongoose from 'mongoose';
 
-class Connect {
+class Database {
+
+    #uri: string
+
     constructor(uri: string) {
-        mongoose.connect(uri).then(
+        this.#uri = uri
+    }
+
+    connect() {
+        mongoose.connect(this.#uri).then(
             () => {
                 console.log('¡Conectado a MongoDB exitosamente! 🎉');
             }
@@ -15,4 +22,4 @@ class Connect {
     }
 }
 
-export { Connect }
+export { Database }
