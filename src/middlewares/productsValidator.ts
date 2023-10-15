@@ -16,6 +16,7 @@ class ProductsValidator {
 
             const createProducValidator: any = CREATE_PRODUCT
             let error: boolean = false;
+            
             for (const key in createProducValidator) {
                 // Validamos si el body tiene cada uno de los parámetros requeridos:
                 if (!Object.prototype.hasOwnProperty.call(req.body, key)) {
@@ -23,7 +24,7 @@ class ProductsValidator {
                     break
                 }
                 // Validamos que sea el mismo tipo de dato:
-                if (typeof req.body[key] !== typeof createProducValidator[key]){
+                if (typeof req.body[key] !== typeof createProducValidator[key]) {
                     error = true
                     break
                 }
@@ -35,10 +36,11 @@ class ProductsValidator {
                     title: messages.products.title,
                     message: messages.products.common.errors.badRequest
                 }
+                return res.status(response.status).json(response)
             }
 
             next()
-            
+
         } catch (error: any) {
             const response: IResponse = {
                 status: HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
@@ -46,7 +48,7 @@ class ProductsValidator {
                 message: error.message
             }
 
-            return res.status(response.status).send(response);
+            return res.status(response.status).json(response);
         }
 
 
@@ -63,7 +65,7 @@ class ProductsValidator {
                     message: messages.products.common.errors.badRequest
                 }
 
-                return res.status(response.status).send(response);
+                return res.status(response.status).json(response);
             }
 
             next()
@@ -75,7 +77,7 @@ class ProductsValidator {
                 message: error.message
             }
 
-            return res.status(response.status).send(response);
+            return res.status(response.status).json(response);
         }
 
     }

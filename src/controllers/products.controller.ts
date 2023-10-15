@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { HTTP_STATUS_CODES } from "../utils/constants"
-import { IResponse } from "../utils/interfaces"
+import { IImages, IResponse } from "../utils/interfaces"
 import { messages } from "../utils/messages"
 import { ProductsService } from "../services/product.service"
 import { GetProductsDTO } from "../dto/products/get.dto"
@@ -52,6 +52,14 @@ class ProductsController {
 
     }
 
+    async #uploadProductImagesToS3(productId: string, images: Array<IImages>): Promise<boolean> {
+        return true
+    }
+
+    async #deleteProductImagesFromS3(productId: string): Promise<boolean> {
+        return true
+    }
+
     async getAll(req: Request, res: Response) {
 
         let response: IResponse = {
@@ -68,20 +76,19 @@ class ProductsController {
                 response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
                 response.message = messages.products.get.error
 
-                return res.status(response.status).send(response)
+                return res.status(response.status).json(response)
             }
 
             const responseObject: Array<GetProductsDTO> = this.#configureGetAllResponse(getAllData.data)
 
             response.object = responseObject
-            return res.status(response.status).send(response)
+            return res.status(response.status).json(response)
 
         } catch (error) {
-            const response: IResponse = {
-                status: HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
-                title: messages.products.title,
-                message: messages.products.get.error
-            }
+
+            response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+            response.message = messages.products.get.error
+
             return res.status(response.status).json(response);
         }
 
@@ -103,20 +110,19 @@ class ProductsController {
                 response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
                 response.message = messages.products.getById.error
 
-                return res.status(response.status).send(response)
+                return res.status(response.status).json(response)
             }
 
             const responseObject: Array<GetProductsByIdDTO> = this.#configureGetByIdResponse(getByIdData.data)
 
             response.object = responseObject
-            return res.status(response.status).send(response)
+            return res.status(response.status).json(response)
 
         } catch (error) {
-            const response: IResponse = {
-                status: HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
-                title: messages.products.title,
-                message: messages.products.getById.error
-            }
+
+            response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+            response.message = messages.products.getById.error
+
             return res.status(response.status).json(response);
         }
 
@@ -124,22 +130,39 @@ class ProductsController {
 
     async create(req: Request, res: Response) {
 
+        let response: IResponse = {
+            status: HTTP_STATUS_CODES.OK,
+            title: messages.products.title,
+            message: messages.products.create.ok
+        }
+
         try {
 
-            const response: IResponse = {
-                status: HTTP_STATUS_CODES.OK,
-                title: messages.products.title,
-                message: messages.products.insert.ok,
-                object: {}
+            const createData = await this.#productService.create(req.body)
+
+            if (createData.error) {
+                response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+                response.message = messages.products.create.error
+
+                return res.status(response.status).json(response)
             }
 
-            return res.status(response.status).send(response)
-        } catch (error) {
-            const response: IResponse = {
-                status: HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
-                title: messages.products.title,
-                message: messages.products.insert.error
+            // En caso de que se haya creado correctamente el registro del producto, 
+            // procedemos a registrar las posibles imágenes en el S3:
+            const uploadImagesResponse: boolean = await this.#uploadProductImagesToS3(req.body.images, createData.data)
+
+            if (!uploadImagesResponse) {
+                response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+                response.message = messages.products.uploadImages.error
             }
+
+            return res.status(response.status).json(response)
+
+        } catch (error) {
+
+            response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+            response.message = messages.products.create.error
+
             return res.status(response.status).json(response);
         }
 
@@ -152,16 +175,17 @@ class ProductsController {
             const response: IResponse = {
                 status: HTTP_STATUS_CODES.OK,
                 title: messages.products.title,
-                message: messages.products.insert.ok,
+                message: messages.products.create.ok,
                 object: {}
             }
 
-            return res.status(response.status).send(response)
+            return res.status(response.status).json(response)
+            
         } catch (error) {
             const response: IResponse = {
                 status: HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
                 title: messages.products.title,
-                message: messages.products.insert.error
+                message: messages.products.create.error
             }
             return res.status(response.status).json(response);
         }
@@ -184,17 +208,25 @@ class ProductsController {
                 response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
                 response.message = messages.products.delete.error
 
-                return res.status(response.status).send(response)
+                return res.status(response.status).json(response)
             }
 
-            return res.status(response.status).send(response)
+            // En caso de que se haya eliminado correctamente la información del producto, 
+            // procedemos a eliminar las posibles imágenes que tenga en el S3:
+            const deleteImagesResponse: boolean = await this.#deleteProductImagesFromS3(req.params.id)
+
+            if (!deleteImagesResponse) {
+                response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+                response.message = messages.products.deleteImages.error
+            }
+
+            return res.status(response.status).json(response)
 
         } catch (error) {
-            const response: IResponse = {
-                status: HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
-                title: messages.products.title,
-                message: messages.products.insert.error
-            }
+
+            response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+            response.message = messages.products.delete.error
+
             return res.status(response.status).json(response);
         }
 

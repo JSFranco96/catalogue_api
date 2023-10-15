@@ -9,7 +9,7 @@ export const messages = {
                 badRequest: 'Los parámetros enviados no son correctos'
             }
         },
-        insert: {
+        create: {
             error: 'Ocurrió un error registrando el producto.',
             ok: 'El producto fue registrado exitosamente.',
         },
@@ -28,6 +28,12 @@ export const messages = {
         delete: {
             error: 'Ocurrió un error eliminando el producto.',
             ok: 'Se eliminó el producto exitosamente'
+        },
+        deleteImages: {
+            error: 'Ocurrió un error eliminando las imágenes asociadas al producto.'
+        },
+        uploadImages: {
+            error: 'Ocurrió un error cargando las imágenes del producto.'
         }
     },
     tags: {
