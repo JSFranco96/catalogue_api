@@ -75,10 +75,10 @@ class ProductsService {
         }
 
         return res
-
     }
 
     async delete(_id: string): Promise<IDataResponse> {
+
         const res: IDataResponse = {
             error: false,
             data: null

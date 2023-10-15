@@ -66,7 +66,7 @@ class ProductsController {
 
             if (getAllData.error) {
                 response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-                response.message = messages.products.insert.error
+                response.message = messages.products.get.error
 
                 return res.status(response.status).send(response)
             }
@@ -80,7 +80,7 @@ class ProductsController {
             const response: IResponse = {
                 status: HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
                 title: messages.products.title,
-                message: messages.products.insert.error
+                message: messages.products.get.error
             }
             return res.status(response.status).json(response);
         }
@@ -101,7 +101,7 @@ class ProductsController {
 
             if (getByIdData.error) {
                 response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
-                response.message = messages.products.insert.error
+                response.message = messages.products.getById.error
 
                 return res.status(response.status).send(response)
             }
@@ -115,7 +115,7 @@ class ProductsController {
             const response: IResponse = {
                 status: HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
                 title: messages.products.title,
-                message: messages.products.insert.error
+                message: messages.products.getById.error
             }
             return res.status(response.status).json(response);
         }
@@ -170,16 +170,25 @@ class ProductsController {
 
     async delete(req: Request, res: Response) {
 
+        let response: IResponse = {
+            status: HTTP_STATUS_CODES.OK,
+            title: messages.products.title,
+            message: messages.products.delete.ok
+        }
+
         try {
 
-            const response: IResponse = {
-                status: HTTP_STATUS_CODES.OK,
-                title: messages.products.title,
-                message: messages.products.insert.ok,
-                object: {}
+            const deleteData = await this.#productService.delete(req.params.id)
+
+            if (deleteData.error) {
+                response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
+                response.message = messages.products.delete.error
+
+                return res.status(response.status).send(response)
             }
 
             return res.status(response.status).send(response)
+
         } catch (error) {
             const response: IResponse = {
                 status: HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
