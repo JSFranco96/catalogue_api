@@ -82,6 +82,50 @@ class ProductsValidator {
 
     }
 
+    validateProductUpdate(req: Request, res: Response, next: NextFunction) {
+
+        try {
+
+            const createProducValidator: any = CREATE_PRODUCT
+            let error: boolean = false;
+            
+            for (const key in req.body) {
+                // Validamos si las propiedades del body, existen en el objeto creado para su validación
+                if (!Object.prototype.hasOwnProperty.call(createProducValidator, key)) {
+                    error = true
+                    break
+                }
+                // Validamos que sea el mismo tipo de dato:
+                if (typeof req.body[key] !== typeof createProducValidator[key]) {
+                    error = true
+                    break
+                }
+            }
+
+            if (error) {
+                const response: IResponse = {
+                    status: HTTP_STATUS_CODES.BAD_REQUEST,
+                    title: messages.products.title,
+                    message: messages.products.common.errors.badRequest
+                }
+                return res.status(response.status).json(response)
+            }
+
+            next()
+
+        } catch (error: any) {
+            const response: IResponse = {
+                status: HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR,
+                title: messages.products.title,
+                message: error.message
+            }
+
+            return res.status(response.status).json(response);
+        }
+
+
+    }
+
 }
 
 export {
