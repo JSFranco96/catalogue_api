@@ -1,5 +1,5 @@
 interface CreateTagDTO {
-    tag: String
+    tags: Array<string>
 }
 
 export { CreateTagDTO }

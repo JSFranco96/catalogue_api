@@ -5,30 +5,21 @@ import { HTTP_STATUS_CODES } from "../utils/constants"
 import { isValidObjectId } from "mongoose"
 import { CREATE_PRODUCT } from "../utils/validators"
 import { CreateProductDTO } from "../dto/products/create.dto"
+import { Commons } from "../utils/commons"
 
 class ProductsValidator {
 
-    constructor() { }
+    #commons: Commons
+
+    constructor() {
+        this.#commons = new Commons()
+    }
 
     validateProductCreation(req: Request, res: Response, next: NextFunction) {
 
         try {
 
-            const createProducValidator: any = CREATE_PRODUCT
-            let error: boolean = false;
-            
-            for (const key in createProducValidator) {
-                // Validamos si el body tiene cada uno de los parámetros requeridos:
-                if (!Object.prototype.hasOwnProperty.call(req.body, key)) {
-                    error = true
-                    break
-                }
-                // Validamos que sea el mismo tipo de dato:
-                if (typeof req.body[key] !== typeof createProducValidator[key]) {
-                    error = true
-                    break
-                }
-            }
+            let error: boolean = this.#commons.ObjectsPropertyValidator(CREATE_PRODUCT, req.body)
 
             if (error) {
                 const response: IResponse = {
@@ -86,21 +77,7 @@ class ProductsValidator {
 
         try {
 
-            const createProducValidator: any = CREATE_PRODUCT
-            let error: boolean = false;
-            
-            for (const key in req.body) {
-                // Validamos si las propiedades del body, existen en el objeto creado para su validación
-                if (!Object.prototype.hasOwnProperty.call(createProducValidator, key)) {
-                    error = true
-                    break
-                }
-                // Validamos que sea el mismo tipo de dato:
-                if (typeof req.body[key] !== typeof createProducValidator[key]) {
-                    error = true
-                    break
-                }
-            }
+            let error: boolean = this.#commons.ObjectsPropertyValidator(req.body, CREATE_PRODUCT)
 
             if (error) {
                 const response: IResponse = {

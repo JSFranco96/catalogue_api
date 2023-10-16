@@ -12,6 +12,6 @@ const tagsSchema = new Schema(
     }
 )
 
-const Tag = model('tags', tagsSchema)
+const Tags = model('tags', tagsSchema)
 
-export { Tag }
+export { Tags }

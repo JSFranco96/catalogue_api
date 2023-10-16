@@ -2,7 +2,7 @@ import { Request, Response } from "express"
 import { HTTP_STATUS_CODES } from "../utils/constants"
 import { IImages, IResponse } from "../utils/interfaces"
 import { messages } from "../utils/messages"
-import { ProductsService } from "../services/product.service"
+import { ProductsService } from "../services/products.service"
 import { GetProductsDTO } from "../dto/products/get.dto"
 import { GetProductsByIdDTO } from "../dto/products/getById.dto"
 

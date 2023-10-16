@@ -38,7 +38,7 @@ export const messages = {
     },
     tags: {
         title: 'Etiquetas',
-        insert: {
+        create: {
             error: 'Ocurrió un error registrando las etiquetas.',
             ok: 'Las etiquetas se registraron exitosamente.'
         },

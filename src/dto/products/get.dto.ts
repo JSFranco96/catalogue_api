@@ -6,7 +6,7 @@ interface GetProductsDTO {
     sku: string
     price: number
     images: Array<IImages>,
-    tags: Array<CreateTagDTO>
+    tags: Array<string>
 }
 
 export { GetProductsDTO }

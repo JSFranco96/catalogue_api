@@ -6,7 +6,7 @@ interface CreateProductDTO {
     description: String
     sku: String
     images: Array<IImages>
-    tags: Array<CreateTagDTO>
+    tags: Array<string>
     price: Number
     stock: Number
 }
