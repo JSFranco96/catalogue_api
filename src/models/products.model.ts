@@ -42,11 +42,7 @@ const productsSchema = new Schema(
                 stock: Number,
                 date: Date
             }
-        ],
-        active: {
-            type: Boolean,
-            default: true
-        }
+        ]
     },
     {
         timestamps: true

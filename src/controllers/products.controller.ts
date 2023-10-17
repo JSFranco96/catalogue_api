@@ -21,15 +21,21 @@ class ProductsController {
         }
         try {
 
-            let page = 0;
-            let limit = 8;
+            let page: number = 0
+            let limit: number = 8
             // Obtenemos el número de la pagina a conulstar:
             if (req.query.page && +req.query.page) {
                 page = +req.query.page
             }
 
+            // Verificamos si se requiere filtrar:
+            let filter: string = ''
+            if (req.query.filter) {
+                filter = String(req.query.filter)
+            }
+
             const productService = new ProductsService()
-            const getAllData = await productService.getAll(page, limit)
+            const getAllData = await productService.getAll(page, limit, filter)
 
             if (getAllData.error) {
                 response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
@@ -90,8 +96,9 @@ class ProductsController {
 
             response.object = {
                 description: getByIdData.data.description,
-                state: getByIdData.data.state,
-                stock: getByIdData.data.stock
+                stock: getByIdData.data.stock,
+                priceHistory: getByIdData.data.priceHistory,
+                stockHistory: getByIdData.data.stockHistory
             } as GetProductsByIdDTO
             return res.status(response.status).json(response)
 

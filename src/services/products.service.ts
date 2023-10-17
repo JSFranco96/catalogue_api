@@ -7,7 +7,7 @@ class ProductsService {
 
     constructor() { }
 
-    async getAll(page: number, limit: number = 8): Promise<IDataResponse> {
+    async getAll(page: number, limit: number = 8, filter: string = ''): Promise<IDataResponse> {
 
         const res: IDataResponse = {
             error: false,
@@ -16,9 +16,25 @@ class ProductsService {
 
         try {
             const skip = page * limit
-            res.data = {
-                info: await Products.find().skip(skip).limit(limit).lean(),
-                total: await Products.count()
+            if (filter) {
+                const $or: any = [
+                    { name: { $regex: new RegExp(filter, 'i') } },
+                    { sku: { $regex: new RegExp(filter, 'i') } },
+                    {
+                        tags: {
+                            $elemMatch: { $regex: new RegExp(filter, 'i') }
+                        }
+                    }
+                ]
+                res.data = {
+                    info: await Products.find({ $or }).skip(skip).limit(limit).lean(),
+                    total: await Products.find({ $or }).count()
+                }
+            } else {
+                res.data = {
+                    info: await Products.find().skip(skip).limit(limit).lean(),
+                    total: await Products.count()
+                }
             }
         } catch (error) {
             res.error = true;
