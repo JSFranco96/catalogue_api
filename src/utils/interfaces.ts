@@ -9,14 +9,3 @@ export interface IDataResponse {
     error: Boolean;
     data: any
 }
-
-export interface IImages {
-    name: string
-    url: string
-    uploaded: Boolean
-}
-
-export interface IFileObject {
-    Key: string | undefined
-    Body: Buffer | undefined
-}

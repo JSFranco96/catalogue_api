@@ -39,15 +39,14 @@ class ProductsRouter {
 
         this.#router.post(
             '/',
-            [
-                this.#upload.single('image'),
-                this.#productValidator.validateProductCreation,
-            ],
+            this.#upload.single('image'),
+            this.#productValidator.validateProductCreation,
             this.#productController.create
         )
 
         this.#router.patch(
             '/:id',
+            this.#upload.single('image'),
             this.#productValidator.validateProductId,
             this.#productValidator.validateProductCreation,
             this.#productController.update

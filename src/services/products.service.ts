@@ -72,7 +72,7 @@ class ProductsService {
         }
 
         try {
-            res.data = await Products.updateOne({ _id }, { $set: product })
+            res.data = await Products.findOneAndUpdate({ _id }, { $set: product }).lean()
         } catch (error) {
             res.error = true
             res.data = error

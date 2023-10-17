@@ -9,24 +9,16 @@ import { Commons } from "../utils/commons"
 
 class ProductsValidator {
 
-    #commons: Commons
-
-    constructor() {
-        this.#commons = new Commons()
-    }
+    constructor() { }
 
     validateProductCreation(req: Request, res: Response, next: NextFunction) {
 
         try {
 
-            console.log('FILE >>', req.file)
-
-            console.log('BODY >>', req.body)
-            
             Object.keys(req.body).forEach(key => {
                 req.body[key] = JSON.parse(req.body[key]);
             })
-            
+
             const commons = new Commons()
             let error: boolean = commons.ObjectsPropertyValidator(CREATE_PRODUCT, req.body)
 
@@ -86,7 +78,12 @@ class ProductsValidator {
 
         try {
 
-            let error: boolean = this.#commons.ObjectsPropertyValidator(req.body, CREATE_PRODUCT)
+            Object.keys(req.body).forEach(key => {
+                req.body[key] = JSON.parse(req.body[key]);
+            })
+
+            const commons = new Commons()
+            let error: boolean = commons.ObjectsPropertyValidator(req.body, CREATE_PRODUCT)
 
             if (error) {
                 const response: IResponse = {

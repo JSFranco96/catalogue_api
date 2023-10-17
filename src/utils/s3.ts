@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectsCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 class ClientS3 {
 
@@ -7,8 +7,6 @@ class ClientS3 {
     #rootFolder: string
 
     constructor() {
-
-
         this.#s3Client = new S3Client({
             region: process.env.AWS_S3_REGION || '',
             credentials: {
@@ -35,7 +33,7 @@ class ClientS3 {
 
         try {
             const response = await this.#s3Client.send(command)
-            console.log('🎉 Objeto cargado exitosamente >> ', response);
+            console.log('🎉 Objeto cargado exitosamente >> ');
             return true
         } catch (error) {
             console.error('❌ Ocurrió un error cargando el archivo a S3 >> ', error)
@@ -55,37 +53,6 @@ class ClientS3 {
         } catch (error) {
             console.error('❌ Ocurrió un error obteniendo el objeto del S3 >> ', error)
             return ''
-        }
-    }
-
-    async delete(folder: string, keys: Array<string>): Promise<boolean> {
-        const objKeys = keys.map((key: string) => {
-            return {
-                Key: `${this.#rootFolder}/${folder}/${key}`
-            }
-        })
-
-        const command = new DeleteObjectsCommand({
-            Bucket: this.#bucket,
-            Delete: {
-                Objects: [...objKeys, { Key: folder }]
-            }
-        })
-
-        try {
-            const { Deleted } = await this.#s3Client.send(command)
-            if (!Deleted) {
-                console.log('🔍 No se encontraron objetos para elminar')
-                return true
-            }
-            console.log(
-                `🎉 Se eliminaron exitosamente ${Deleted.length} objetos del bucket de S3. Objetos eliminados:`,
-            );
-            console.log(Deleted.map((d) => ` • ${d.Key}`).join("\n"));
-            return true
-        } catch (error) {
-            console.error('❌ Ocurrió un error eliminando los objetos del S3 >> ', error)
-            return false
         }
     }
 
