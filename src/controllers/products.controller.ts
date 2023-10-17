@@ -60,9 +60,6 @@ class ProductsController {
             return res.status(response.status).json(response)
 
         } catch (error) {
-
-            console.log(error);
-
             response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
             response.message = messages.products.get.error
 
@@ -152,9 +149,6 @@ class ProductsController {
             return res.status(response.status).json(response)
 
         } catch (error) {
-            console.log(error);
-
-
             response.status = HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR
             response.message = messages.products.create.error
 
@@ -176,7 +170,6 @@ class ProductsController {
 
             const productsService = new ProductsService()
             const body: CreateProductDTO = { ...req.body }
-            console.log(req.file);
 
             if (req.file) {
                 body.image = req.file.originalname
