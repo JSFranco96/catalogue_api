@@ -7,7 +7,7 @@ class ProductsService {
 
     constructor() { }
 
-    async getAll(): Promise<IDataResponse> {
+    async getAll(page: number, limit: number = 8): Promise<IDataResponse> {
 
         const res: IDataResponse = {
             error: false,
@@ -15,7 +15,11 @@ class ProductsService {
         }
 
         try {
-            res.data = await Products.find().lean()
+            const skip = page * limit
+            res.data = {
+                info: await Products.find().skip(skip).limit(limit).lean(),
+                total: await Products.count()
+            }
         } catch (error) {
             res.error = true;
             res.data = error;

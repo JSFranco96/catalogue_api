@@ -1,10 +1,12 @@
 import { Router } from "express";
 import { ProductsController } from "../controllers/products.controller";
 import { ProductsValidator } from "../middlewares/productsValidator";
+import multer, { Multer } from 'multer'
 
 class ProductsRouter {
 
     #router: Router
+    #upload: Multer
 
     get router(): Router {
         return this.#router
@@ -14,7 +16,7 @@ class ProductsRouter {
     #productValidator: ProductsValidator
 
     constructor() {
-        
+        this.#upload = multer()
         this.#router = Router()
         this.#productController = new ProductsController()
         this.#productValidator = new ProductsValidator()
@@ -37,7 +39,10 @@ class ProductsRouter {
 
         this.#router.post(
             '/',
-            this.#productValidator.validateProductCreation,
+            [
+                this.#upload.single('image'),
+                this.#productValidator.validateProductCreation,
+            ],
             this.#productController.create
         )
 

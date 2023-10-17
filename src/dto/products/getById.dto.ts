@@ -1,5 +1,5 @@
 interface GetProductsByIdDTO {
-    descrition: string
+    description: string
     stock: number
     state: boolean
 }

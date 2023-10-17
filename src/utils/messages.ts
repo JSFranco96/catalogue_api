@@ -30,10 +30,10 @@ export const messages = {
             ok: 'Se eliminó el producto exitosamente'
         },
         deleteImages: {
-            error: 'Ocurrió un error eliminando las imágenes asociadas al producto.'
+            error: 'Ocurrió un error eliminando la imagen asociada al producto.'
         },
         uploadImages: {
-            error: 'Ocurrió un error cargando las imágenes del producto.'
+            error: 'Ocurrió un error cargando la imagen del producto.'
         }
     },
     tags: {

@@ -1,7 +1,7 @@
 import express from 'express';
 import { ProductsRouter } from './routes/products.route';
 import { TagsRouter } from './routes/tags.route';
-
+import cors from 'cors'
 class App {
 
     #port: number;
@@ -24,7 +24,9 @@ class App {
 
     #createExpressApp() {
         this.#app = express()
-        this.#app.use(express.json)
+        this.#app.use(cors())
+        this.#app.use(express.json())
+        this.#app.use(express.urlencoded({ extended: false }));
     }
 
     #listenPort() {
@@ -34,6 +36,7 @@ class App {
     }
 
     #initializeRoutes() {
+
         const productsRouter = new ProductsRouter()
         this.#app.use('/products', productsRouter.router)
 

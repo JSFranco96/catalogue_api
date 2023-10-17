@@ -18,12 +18,10 @@ const productsSchema = new Schema(
             unique: true,
             len: 10
         },
-        images: [
-            {
-                url: String,
-                uploaded: Boolean
-            }
-        ],
+        image: {
+            type: String,
+            required: true
+        },
         tags: [String],
         price: {
             type: Number,

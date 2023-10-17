@@ -1,5 +1,5 @@
 import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectsCommand } from "@aws-sdk/client-s3";
-
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 class ClientS3 {
 
     #s3Client: S3Client
@@ -26,7 +26,7 @@ class ClientS3 {
 
     }
 
-    async upload(folder: string, key: string, body: any): Promise<boolean> {
+    async upload(folder: string, key: string | undefined, body: any): Promise<boolean> {
         const command = new PutObjectCommand({
             Bucket: this.#bucket,
             Key: `${this.#rootFolder}/${folder}/${key}`,
@@ -43,20 +43,18 @@ class ClientS3 {
         }
     }
 
-    async get(folder: string, key: string): Promise<any> {
+    async get(folder: string, key: string): Promise<string> {
         const command = new GetObjectCommand({
             Bucket: this.#bucket,
             Key: `${this.#rootFolder}/${folder}/${key}`
         })
 
         try {
-            const response = await this.#s3Client.send(command)
-            const str = await response.Body?.transformToString()
-            console.log('🎉 Objecto obtenido exitosamente >> ', str)
-            return str
+            const url = await getSignedUrl(this.#s3Client, command, { expiresIn: 60 * 60 })
+            return url
         } catch (error) {
             console.error('❌ Ocurrió un error obteniendo el objeto del S3 >> ', error)
-            return null
+            return ''
         }
     }
 
@@ -91,5 +89,6 @@ class ClientS3 {
         }
     }
 
-
 }
+
+export { ClientS3 }

@@ -19,7 +19,16 @@ class ProductsValidator {
 
         try {
 
-            let error: boolean = this.#commons.ObjectsPropertyValidator(CREATE_PRODUCT, req.body)
+            console.log('FILE >>', req.file)
+
+            console.log('BODY >>', req.body)
+            
+            Object.keys(req.body).forEach(key => {
+                req.body[key] = JSON.parse(req.body[key]);
+            })
+            
+            const commons = new Commons()
+            let error: boolean = commons.ObjectsPropertyValidator(CREATE_PRODUCT, req.body)
 
             if (error) {
                 const response: IResponse = {

@@ -4,7 +4,6 @@ import { CreateTagDTO } from '../dto/tags/create.dto'
 export const CREATE_PRODUCT: CreateProductDTO = {
     name: '',
     description: '',
-    images: [{ url: '', uploaded: false }],
     price: 0,
     sku: '',
     stock: 0,

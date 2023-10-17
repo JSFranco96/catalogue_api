@@ -1,14 +1,13 @@
 import { IImages } from "../../utils/interfaces"
-import { CreateTagDTO } from "../tags/create.dto"
 
 interface CreateProductDTO {
-    name: String
-    description: String
-    sku: String
-    images: Array<IImages>
+    name: string
+    description: string
+    sku: string
+    image?: string
     tags: Array<string>
-    price: Number
-    stock: Number
+    price: number
+    stock: number
 }
 
 export { CreateProductDTO }

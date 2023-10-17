@@ -1,8 +1,8 @@
 export interface IResponse {
-    status: number;
-    title: String;
-    message: String;
-    object?: any;
+    status: number
+    title: string
+    message: string
+    object?: any
 }
 
 export interface IDataResponse {
@@ -11,6 +11,12 @@ export interface IDataResponse {
 }
 
 export interface IImages {
-    url: String
+    name: string
+    url: string
     uploaded: Boolean
+}
+
+export interface IFileObject {
+    Key: string | undefined
+    Body: Buffer | undefined
 }
