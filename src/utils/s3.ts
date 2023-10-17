@@ -32,7 +32,7 @@ class ClientS3 {
         })
 
         try {
-            const response = await this.#s3Client.send(command)
+            await this.#s3Client.send(command)
             console.log('🎉 Objeto cargado exitosamente >> ');
             return true
         } catch (error) {
