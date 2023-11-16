@@ -6,7 +6,7 @@
   "scripts": {
     "start:dev": "SET NODE_ENV=dev&& npx nodemon",
     "build": "rimraf ./build && tsc",
-    "start": "npm run build &&SET NODE_ENV=dev&&node build/index.js"
+    "start": "node build/index.js"
   },
   "keywords": [],
   "author": "",
